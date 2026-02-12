@@ -17,4 +17,4 @@ Standard ComfyUI installers might not have the latest kernels or optimizations f
 4.  Run the generated **`START_COMFY.bat`** to launch!
 
 ## Note on SageAttention
-To use the speed improvements, simply add the **"Patch Sage Attention"** node to your ComfyUI workflows. The library is already installed and ready to go.
+To use the speed improvements, simply add the **"Patch Sage Attention"** node to your ComfyUI workflows right before the ksampler. The library is already installed and ready to go.
