@@ -21,7 +21,8 @@ To use the speed improvements, simply add the **"Patch Sage Attention"** node to
 
 To get the sage attention patch node do this:
 Launch ComfyUI.
-Click Manager -> Install Custom Nodes.
-Search for KJNodes.
-Install ComfyUI-KJNodes by kijai.
+Click Manager -> 
+Install Custom Nodes. ->
+Search for KJNodes. ->
+Install ComfyUI-KJNodes by kijai. ->
 Restart ComfyUI.
