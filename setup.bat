@@ -1,10 +1,10 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 
 :: Logging disabled
 
-title Blackwell 5080 Installer (Linear Mode)
+title Blackwell 5000 Installer (Linear Mode)
 echo Installer is running from:
 echo %~f0
 echo.
@@ -47,25 +47,65 @@ if %errorlevel% neq 0 (
 
 :: --- STEP 3: INSTALLING CORE ---
 echo.
-echo [4/5] Installing PyTorch & SageAttention...
-pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
-if not exist "utils" mkdir "utils"
-set "SAGE_WHEEL=utils\sageattention-2.2.0+cu128.torch2.11-cp311-cp311-win_amd64.whl"
-if not exist "%SAGE_WHEEL%" (
-    echo Downloading SageAttention wheel...
-    curl -L -o "%SAGE_WHEEL%" "https://github.com/mobcat40/sageattention-blackwell/raw/main/sageattention-2.2.0+cu128.torch2.11-cp311-cp311-win_amd64.whl"
-)
-echo Installing SageAttention...
-pip install "%SAGE_WHEEL%"
-
+echo [4/5] Cloning ComfyUI ^& Installing Requirements...
 if not exist "comfy-ui" (
     echo Cloning ComfyUI into comfy-ui folder...
     git clone https://github.com/Comfy-Org/ComfyUI.git comfy-ui
+    if !errorlevel! neq 0 (
+        echo [CRITICAL ERROR] Git clone failed! Check internet connection.
+        pause
+        exit
+    )
 )
-echo Installing Requirements...
+
+echo Installing ComfyUI Requirements...
+if not exist "comfy-ui\requirements.txt" (
+    echo [CRITICAL ERROR] requirements.txt not found in comfy-ui!
+    pause
+    exit
+)
+
 cd comfy-ui
 pip install -r requirements.txt
 cd ..
+
+echo.
+echo [4.2/5] Upgrading to PyTorch Nightly (Blackwell Optimized)...
+:: Forced upgrade to prevent downgrade by requirements.txt
+pip install --pre --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
+
+echo.
+echo [4.4/5] Installing SageAttention (Local Backup)...
+if not exist "utils" mkdir "utils"
+set "SAGE_WHEEL=utils\sageattention-2.2.0+cu128.torch2.11-cp311-cp311-win_amd64.whl"
+
+:: Check for corrupt file (less than 1KB)
+if exist "%SAGE_WHEEL%" (
+    for %%I in ("%SAGE_WHEEL%") do if %%~zI LSS 1024 (
+        echo [WARNING] Detected corrupt wheel file. Deleting...
+        del "%SAGE_WHEEL%"
+    )
+)
+
+if not exist "%SAGE_WHEEL%" (
+    echo Downloading SageAttention wheel...
+    curl -L -o "%SAGE_WHEEL%" "https://github.com/mobcat40/sageattention-blackwell/raw/main/sageattention-2.2.0+cu128.torch2.11-cp311-cp311-win_amd64.whl"
+    if !errorlevel! neq 0 (
+        echo [CRITICAL ERROR] Download failed!
+        if exist "%SAGE_WHEEL%" del "%SAGE_WHEEL%"
+        pause
+        exit
+    )
+)
+
+if exist "%SAGE_WHEEL%" (
+    echo Installing from local wheel...
+    pip install "%SAGE_WHEEL%"
+) else (
+    echo [CRITICAL ERROR] Wheel file missing!
+    pause
+    exit
+)
 
 echo.
 echo [4.5/5] Installing ComfyUI-Manager...
@@ -114,7 +154,7 @@ echo Generating launcher maker...
 >> maker.py echo cls
 >> maker.py echo python utils\banner.py
 >> maker.py echo echo.
->> maker.py echo echo Blackwell 5080 (Linear Mode)
+>> maker.py echo echo Blackwell 5000 (Linear Mode)
 >> maker.py echo echo.
 >> maker.py echo echo.
 >> maker.py echo set "VENV=%%~dp0venv\Scripts\activate.bat"
