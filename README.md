@@ -18,3 +18,10 @@ Standard ComfyUI installers might not have the latest kernels or optimizations f
 
 ## Note on SageAttention
 To use the speed improvements, simply add the **"Patch Sage Attention"** node to your ComfyUI workflows right before the ksampler. The library is already installed and ready to go.
+
+To get the sage attention patch node do this:
+Launch ComfyUI.
+Click Manager -> Install Custom Nodes.
+Search for KJNodes.
+Install ComfyUI-KJNodes by kijai.
+Restart ComfyUI.
