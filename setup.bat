@@ -75,6 +75,9 @@ echo [4.2/5] Upgrading to PyTorch Nightly (Blackwell Optimized)...
 pip install --pre --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128
 
 echo.
+echo [4.3/5] Installing Triton (Windows)...
+pip install triton-windows
+echo.
 echo [4.4/5] Installing SageAttention (Local Backup)...
 if not exist "utils" mkdir "utils"
 set "SAGE_WHEEL=utils\sageattention-2.2.0+cu128.torch2.11-cp311-cp311-win_amd64.whl"
@@ -194,7 +197,8 @@ echo ========================================================
 echo.
 echo  1. ComfyUI is installed in "comfy-ui".
 echo  2. SageAttention is patched and ready.
-echo  3. Manager is installed.
+echo  3. Triton (Windows) is installed.
+echo  4. Manager is installed.
 echo.
 echo  [ACTION] Run "START_COMFY.bat" to launch!
 echo.
