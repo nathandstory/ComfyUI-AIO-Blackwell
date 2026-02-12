@@ -8,7 +8,8 @@ Standard ComfyUI installers might not have the latest kernels or optimizations f
 1.  **Python 3.11**: Checks for and installs the correct Python version if missing.
 2.  **Isolated Environment**: Creates a dedicated virtual environment (`venv`) so it doesn't mess with your system.
 3.  **Blackwell Optimization**: Installs **PyTorch Nightly** and a specifically patched **SageAttention** wheel for maximum performance on 5000-series GPUs.
-4.  **ComfyUI & Manager**: Downloads the latest ComfyUI and installs the ComfyUI Manager automatically.
+4.  **Triton Support**: Automatically installs the **Triton (Windows)** library required for advanced optimizations.
+5.  **ComfyUI & Manager**: Downloads the latest ComfyUI and installs the ComfyUI Manager automatically.
 
 ## How to use
 1.  Download this repository (or just the `setup.bat`).
